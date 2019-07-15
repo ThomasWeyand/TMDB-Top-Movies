@@ -5,6 +5,6 @@
     <string name="toolbar_title">TMDB - Top Filmes</string>
     <string name="launch">Lançamento</string>
     <string name="not_found">Nenhum conteúdo encontrado</string>
-    <string name="error_fetching">Err oao carregar informações</string>
+    <string name="error_fetching">Erro ao carregar informações</string>
 
 </resources>

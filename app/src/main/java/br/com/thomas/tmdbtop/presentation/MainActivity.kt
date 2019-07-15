@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity(), ListHomeInterface {
     }
 
     fun manageSnackMsg(msg : String){
+        if(this::mSnackMsg.isInitialized)
         mSnackMsg.dismiss()
         mSnackMsg = Snackbar.make(mBinding.mainContainer,msg,Snackbar.LENGTH_LONG)
         mSnackMsg.show()
