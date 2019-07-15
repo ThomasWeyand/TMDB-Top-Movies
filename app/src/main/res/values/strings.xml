@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TMDB Top</string>
+    <string name="image_base_342">https://image.tmdb.org/t/p/w342</string>
+    <string name="base_backdrop_path">https://image.tmdb.org/t/p/w1280</string>
+    <string name="toolbar_title">TMDB - Top Filmes</string>
+    <string name="launch">Lançamento</string>
+
+</resources>
