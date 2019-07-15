@@ -11,7 +11,7 @@ import br.com.thomas.tmdbtop.domain.network.NetworkResponseModel
 import br.com.thomas.tmdbtop.mapper.NetworkResponseMapper
 import timber.log.Timber
 
-abstract class NetworkBoundRepository<ResultType,
+abstract class SearchBoundRepository <ResultType,
         RequestType : NetworkResponseModel,
         Mapper : NetworkResponseMapper<RequestType>>
 internal constructor() {
@@ -20,29 +20,18 @@ internal constructor() {
 
     init {
         Timber.d("Injection NetworkBoundRepository")
-        val loadedFromDB = this.loadFromDb()
-        result.addSource(loadedFromDB) { data ->
-            result.removeSource(loadedFromDB)
-            if (shouldFetch(data)) {
-                result.postValue(Resource.loading(null))
-                fetchFromNetwork(loadedFromDB)
-            } else {
-                result.addSource<ResultType>(loadedFromDB) { newData ->
-                    setValue(Resource.success(newData, false))
-                }
-            }
-        }
+        fetchSearchMovies()
     }
 
-    private fun fetchFromNetwork(loadedFromDB: LiveData<ResultType>) {
+    private fun fetchSearchMovies() {
+        setValue(Resource.loading(null))
         val apiResponse = fetchService()
         result.addSource(apiResponse) { response ->
             response?.let {
-                when (response.isSuccessful) {
+                when (response.isSuccessful){
                     true -> {
-                        response.body?.let {
-                            saveFetchData(it)
-                            val loaded = loadFromDb()
+                        response.body?.let{
+                            val loaded = loadFromWeb(it)
                             result.addSource(loaded) { newData ->
                                 newData?.let {
                                     setValue(Resource.success(newData, mapper().onLastPage(response.body)))
@@ -51,10 +40,10 @@ internal constructor() {
                         }
                     }
                     false -> {
-                        result.removeSource(loadedFromDB)
                         onFetchFailed(response.message)
                         response.message?.let {
-                            result.addSource<ResultType>(loadedFromDB) { newData ->
+                            val failed = loadFromWeb(null)
+                            result.addSource<ResultType>(failed) { newData ->
                                 setValue(Resource.error(it, newData))
                             }
                         }
@@ -73,17 +62,11 @@ internal constructor() {
         return result
     }
 
-    @WorkerThread
-    protected abstract fun saveFetchData(items: RequestType)
-
-    @MainThread
-    protected abstract fun shouldFetch(data: ResultType?): Boolean
-
-    @MainThread
-    protected abstract fun loadFromDb(): LiveData<ResultType>
-
     @MainThread
     protected abstract fun fetchService(): LiveData<ApiResponse<RequestType>>
+
+    @MainThread
+    protected abstract fun loadFromWeb(@Nullable items: RequestType?) : LiveData<ResultType>
 
     @MainThread
     protected abstract fun mapper(): Mapper

@@ -27,8 +27,11 @@
         <activity android:name=".presentation.MovieDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DetailScreen"
-            android:parentActivityName=".presentation.MainActivity"
             />
+        <activity android:name=".presentation.SearchActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/DetailScreen"
+        />
     </application>
 
 </manifest>

@@ -7,9 +7,11 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import br.com.thomas.tmdbtop.R
 import br.com.thomas.tmdbtop.databinding.ActivityMainBinding
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity(), ListHomeInterface {
 
     lateinit var mBinding : ActivityMainBinding
     lateinit var mMovieAdapter : TopListAdapter
+    lateinit var mSnackMsg : Snackbar
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -78,11 +81,37 @@ class MainActivity : AppCompatActivity(), ListHomeInterface {
         return true
     }
 
+    fun manageSnackMsg(msg : String){
+        mSnackMsg.dismiss()
+        mSnackMsg = Snackbar.make(mBinding.mainContainer,msg,Snackbar.LENGTH_LONG)
+        mSnackMsg.show()
+    }
+
     private fun setUpObservables() {
         mViewModel.getMovieListValues().observe(this, Observer<Resource<List<Movie>>> { value ->
             value?.let {
-                if(value.status == Status.SUCCESS)
-                mMovieAdapter.swapData(value.data!!)
+                if(value.status == Status.LOADING){
+                    mBinding.loadingSpinner.visibility == View.VISIBLE
+                }
+                else if(value.status == Status.SUCCESS) {
+                    mBinding.loadingSpinner.visibility = View.GONE
+                    if(value.data != null && value.data.size > 0) {
+                        mMovieAdapter.swapData(value.data)
+                    }else {
+                        if(mMovieAdapter.itemCount == 0) {
+                            mBinding.errorTxt.setText(resources.getString(R.string.not_found))
+                        }else{
+                            manageSnackMsg(resources.getString(R.string.not_found))
+                        }
+                    }
+                }else{
+                    mBinding.loadingSpinner.visibility = View.GONE
+                    if(mMovieAdapter.itemCount == 0) {
+                        mBinding.errorTxt.setText(resources.getString(R.string.error_fetching))
+                    }else{
+                        manageSnackMsg(resources.getString(R.string.error_fetching))
+                    }
+                }
             }
         })
     }

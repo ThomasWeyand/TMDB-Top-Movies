@@ -11,4 +11,8 @@ interface TopListService {
     fun getTopRatedMovies(@Query("page") page: Int, @Query("language") language: String):
             LiveData<ApiResponse<DiscoverMovieResponse>>
 
+    @GET("search/movie")
+    fun getSearchedMovies(@Query("query") searched : String,@Query("include_adult") include : Boolean,@Query("page") page: Int, @Query("language") language: String):
+            LiveData<ApiResponse<DiscoverMovieResponse>>
+
 }

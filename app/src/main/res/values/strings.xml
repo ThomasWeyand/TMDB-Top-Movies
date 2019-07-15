@@ -4,5 +4,7 @@
     <string name="base_backdrop_path">https://image.tmdb.org/t/p/w1280</string>
     <string name="toolbar_title">TMDB - Top Filmes</string>
     <string name="launch">Lançamento</string>
+    <string name="not_found">Nenhum conteúdo encontrado</string>
+    <string name="error_fetching">Err oao carregar informações</string>
 
 </resources>
