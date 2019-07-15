@@ -1,0 +1,8 @@
+Aspectos do projeto: 
+- Escrito em Kotlin 
+- Interfaces desenvolvidas usando Constraint layout 
+- Persistencia das informações, funciona offline 
+- Código seguindo o padrão Clean Architeture 
+- Injeção de dependência usando Dagger 
+- Room para persistência dos dados 
+- Retrofit para chamadas da API
