@@ -1,3 +1,9 @@
+Aplicativo consumindo a API do TMDB!
+Features: 
+- Paginação infinita filtrando pelos filmes mais populares
+- Filtragem por pesquisa
+- Tela de detalhes da mídia
+
 Aspectos do projeto: 
 - Escrito em Kotlin 
 - Interfaces desenvolvidas usando Constraint layout 
